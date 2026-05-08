@@ -1,0 +1,30 @@
+{
+  "type": "RealTimeGraphRenderer",
+  "config": {
+    "microphoneEnabled": true,
+    "graph": {
+      "nodes": [
+        { "id": "autotuneNode",    "type": "Superpowered.AutomaticVocalPitchCorrection",
+          "config": { "enabled": false } },
+        { "id": "reverbNode",      "type": "Superpowered.Reverb",
+          "config": { "enabled": false } },
+        { "id": "flangerNode",     "type": "Superpowered.Flanger",
+          "config": { "enabled": false } },
+        { "id": "audioPlayerNode", "type": "Superpowered.AdvancedAudioPlayer" },
+        { "id": "busSplitterNode", "type": "BusSplitter" },
+        { "id": "mixerNode",       "type": "Mixer" },
+        { "id": "ivsSinkNode",     "type": "AmazonIVS.Sink" }
+      ],
+      "connections": [
+        { "sourceNode": "inputNode",       "destinationNode": "autotuneNode" },
+        { "sourceNode": "autotuneNode",    "destinationNode": "reverbNode" },
+        { "sourceNode": "reverbNode",      "destinationNode": "flangerNode" },
+        { "sourceNode": "flangerNode",     "destinationNode": "mixerNode" },
+        { "sourceNode": "audioPlayerNode", "destinationNode": "busSplitterNode" },
+        { "sourceNode": "busSplitterNode", "destinationNode": "mixerNode" },
+        { "sourceNode": "mixerNode",       "destinationNode": "ivsSinkNode" },
+        { "sourceNode": "busSplitterNode", "destinationNode": "outputNode" }
+      ]
+    }
+  }
+}

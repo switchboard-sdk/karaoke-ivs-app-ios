@@ -24,9 +24,9 @@ class KaraokeWithIVSRealtimeViewController: UIViewController {
 
         audioSystem.loadSong(songURL: Bundle.main.url(forResource: "House_of_the_Rising_Sun", withExtension: "mp3")!.absoluteString)
         
-        reverbSwitch.isOn = audioSystem.reverbNode.isEnabled
-        flangerSwitch.isOn = audioSystem.flangerNode.isEnabled
-        avpcSwitch.isOn = audioSystem.autotuneNode.isEnabled
+        reverbSwitch.isOn = audioSystem.isReverbEnabled
+        flangerSwitch.isOn = audioSystem.isFlangerEnabled
+        avpcSwitch.isOn = audioSystem.isAutotuneEnabled
         
         audioSystem.startEngine()
     }

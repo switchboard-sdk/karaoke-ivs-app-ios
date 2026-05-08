@@ -8,6 +8,7 @@
 import UIKit
 import SwitchboardSDK
 import SwitchboardSuperpowered
+import SwitchboardAmazonIVSRealTime
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,8 +16,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        SBSwitchboardSDK.initialize(withAppID: Config.clientID, appSecret: Config.clientSecret)
-        SBSuperpoweredExtension.initialize(withLicenseKey: Config.superpoweredLicenseKey)
+        SBSuperpoweredExtension.loadExtension()
+        SBAmazonIVSExtension.loadExtension()
+        let initConfig: [String: Any] = [
+            "appID": Config.clientID,
+            "appSecret": Config.clientSecret,
+            "extensions": [
+                "Superpowered": ["superpoweredLicenseKey": Config.superpoweredLicenseKey],
+                "AmazonIVS": [:],
+            ],
+        ]
+        Switchboard.initialize(withConfig: initConfig)
 
         return true
     }
