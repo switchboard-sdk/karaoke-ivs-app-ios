@@ -25,5 +25,5 @@ struct Config {
         return paths[0].absoluteString + "mix.wav"
     }
 
-    static let fileFormat: SBCodec = .wav
+
 }

@@ -22,6 +22,7 @@
 		6D36BA212BDFBBFA00378F3D /* AmazonIVSBroadcast.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6D36BA1F2BDFBBFA00378F3D /* AmazonIVSBroadcast.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D8B14842BD94EDF00287039 /* SwitchboardAmazonIVSRealTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6D8B14832BD94EDF00287039 /* SwitchboardAmazonIVSRealTime */; };
 		988C6F7B2B8CC868006E7BE4 /* KaraokeWithAmazonIVSAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988C6F7A2B8CC868006E7BE4 /* KaraokeWithAmazonIVSAppUITests.swift */; };
+		CC000003CC000003CC000003 /* AudioGraph.json in Resources */ = {isa = PBXBuildFile; fileRef = CC000004CC000004CC000004 /* AudioGraph.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		6D36BA1F2BDFBBFA00378F3D /* AmazonIVSBroadcast.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AmazonIVSBroadcast.xcframework; path = libs/AmazonIVSBroadcast.xcframework; sourceTree = "<group>"; };
 		988C6F782B8CC868006E7BE4 /* KaraokeWithAmazonIVSAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KaraokeWithAmazonIVSAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		988C6F7A2B8CC868006E7BE4 /* KaraokeWithAmazonIVSAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaraokeWithAmazonIVSAppUITests.swift; sourceTree = "<group>"; };
+		CC000004CC000004CC000004 /* AudioGraph.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = AudioGraph.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 				4FDF2DA32A8A3CC40034DC53 /* LaunchScreen.storyboard */,
 				4FDF2DA62A8A3CC40034DC53 /* Info.plist */,
 				4FDF2DB52A8A3ED90034DC53 /* Config.swift */,
+				CC000004CC000004CC000004 /* AudioGraph.json */,
 			);
 			path = KaraokeWithAmazonIVSApp;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				4FDF2DA22A8A3CC40034DC53 /* Assets.xcassets in Resources */,
 				4FDF2DA02A8A3CC30034DC53 /* Main.storyboard in Resources */,
 				4FDF2DBE2A8A41910034DC53 /* House_of_the_Rising_Sun.mp3 in Resources */,
+				CC000003CC000003CC000003 /* AudioGraph.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,7 +571,7 @@
 			repositoryURL = "https://github.com/switchboard-sdk/switchboard-sdk-ios";
 			requirement = {
 				kind = exactVersion;
-				version = 2.2.0;
+				version = 3.2.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

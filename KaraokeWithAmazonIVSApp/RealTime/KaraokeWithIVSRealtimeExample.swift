@@ -5,23 +5,17 @@
 //  Created by Balazs Banto on 2024. 03. 01..
 //
 
+import SwitchboardSDK
 import SwitchboardSuperpowered
-
 import AmazonIVSBroadcast
 import SwitchboardAmazonIVSRealTime
-import SwitchboardSDK
-
 
 class KaraokeWithIVSRealtimeExample: NSObject {
-    let audioGraph = SBAudioGraph()
-    let audioPlayerNode = SBAudioPlayerNode()
-    let mixerNode = SBMixerNode()
-    var ivsSinkNode: SBIVSBroadcastSinkNode!
-    let autotuneNode = SBAutomaticVocalPitchCorrectionNode()
-    let reverbNode = SBReverbNode()
-    let flangerNode = SBFlangerNode()
-    let busSplitterNode = SBBusSplitterNode()
-    let audioEngine = SBAudioEngine()
+    private var engineID: String!
+    private var _isPlaying = false
+    private(set) var isReverbEnabled = false
+    private(set) var isFlangerEnabled = false
+    private(set) var isAutotuneEnabled = false
 
     var stage: IVSStage!
     var localStreams: [IVSLocalStageStream] = []
@@ -37,63 +31,50 @@ class KaraokeWithIVSRealtimeExample: NSObject {
         }
         localStreams.append(IVSLocalStageStream(device: ivsCustomAudioSource))
 
-        ivsSinkNode = SBIVSBroadcastSinkNode(customSource: ivsCustomAudioSource)
-
         do {
             stage = try IVSStage(token: Config.clientToken, strategy: self)
-
         } catch {
             print("Failed to join stage - \(error)")
         }
-        
-        reverbNode.isEnabled = false
-        flangerNode.isEnabled = false
-        autotuneNode.isEnabled = false
-        
-        audioGraph.addNode(audioPlayerNode)
-        audioGraph.addNode(mixerNode)
-        audioGraph.addNode(ivsSinkNode)
-        audioGraph.addNode(reverbNode)
-        audioGraph.addNode(flangerNode)
-        audioGraph.addNode(autotuneNode)
-        audioGraph.addNode(busSplitterNode)
-        
-        audioGraph.connect(audioGraph.inputNode, to: autotuneNode)
-        audioGraph.connect(autotuneNode, to: reverbNode)
-        audioGraph.connect(reverbNode, to: flangerNode)
-        audioGraph.connect(flangerNode, to: mixerNode)
-        audioGraph.connect(audioPlayerNode, to: busSplitterNode)
-        audioGraph.connect(busSplitterNode, to: mixerNode)
-        audioGraph.connect(mixerNode, to: ivsSinkNode)
-        audioGraph.connect(busSplitterNode, to: audioGraph.outputNode)
-        
-        audioPlayerNode.isLoopingEnabled = true
 
+        guard let path = Bundle.main.path(forResource: "AudioGraph", ofType: "json"),
+              let json = try? String(contentsOfFile: path),
+              let data = json.data(using: .utf8),
+              let config = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        else { fatalError("AudioGraph.json missing or invalid") }
+
+        let result = Switchboard.createEngine(withConfig: config)
+        engineID = result.value! as String
+
+        let ptr = Int64(bitPattern: UInt64(UInt(bitPattern: Unmanaged.passUnretained(ivsCustomAudioSource).toOpaque())))
+        Switchboard.setValue(ptr, forKey: "customAudioSource", onObject: "ivsSinkNode")
     }
-    
+
     func isPlaying() -> Bool {
-        return audioPlayerNode.isPlaying
+        return _isPlaying
     }
-                           
+
     func loadSong(songURL: String) {
-        audioPlayerNode.load(songURL)
+        let path = URL(string: songURL)?.path ?? songURL
+        Switchboard.callAction(withObject: "audioPlayerNode", actionName: "open", params: ["path": path])
     }
 
     func startEngine() {
-        audioEngine.microphoneEnabled = true
-        audioEngine.start(audioGraph)
+        Switchboard.callAction(withObject: engineID, actionName: "start", params: nil)
     }
 
     func stopEngine() {
-        audioEngine.stop()
+        Switchboard.callAction(withObject: engineID, actionName: "stop", params: nil)
     }
-    
-    func playMusic(){
-        audioPlayerNode.play()
+
+    func playMusic() {
+        Switchboard.callAction(withObject: "audioPlayerNode", actionName: "play", params: nil)
+        _isPlaying = true
     }
-    
-    func stopMusic(){
-        audioPlayerNode.pause()
+
+    func stopMusic() {
+        Switchboard.callAction(withObject: "audioPlayerNode", actionName: "pause", params: nil)
+        _isPlaying = false
     }
 
     func startStage() {
@@ -103,17 +84,20 @@ class KaraokeWithIVSRealtimeExample: NSObject {
     func stopStage() {
         stage?.leave()
     }
-    
+
     func enableReverb(enable: Bool) {
-        reverbNode.isEnabled = enable
+        Switchboard.setValue(enable, forKey: "enabled", onObject: "reverbNode")
+        isReverbEnabled = enable
     }
 
     func enableFlanger(enable: Bool) {
-        flangerNode.isEnabled = enable
+        Switchboard.setValue(enable, forKey: "enabled", onObject: "flangerNode")
+        isFlangerEnabled = enable
     }
 
     func enableAutomaticVocalPitchCorrection(enable: Bool) {
-        autotuneNode.isEnabled = enable
+        Switchboard.setValue(enable, forKey: "enabled", onObject: "autotuneNode")
+        isAutotuneEnabled = enable
     }
 }
 
